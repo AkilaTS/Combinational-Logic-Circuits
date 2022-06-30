@@ -1,0 +1,30 @@
+/**
+ * Chip to detect overflow in signed integer multiplication
+ * OF = (Xn-1 XNOR Yn-1)(Pn-1 + Pn ...P2n-1) + (Xn-1 XOR Yn-1)((Pn-1)' + (Pn)' ...(P2n-1)')   [assuming non-zero operands] where Pi is the ith bit of the product
+**/
+
+CHIP OverflowS {
+
+    IN a[9],x,y;
+    OUT out;
+
+    PARTS:
+
+    Or4(a=a[0],b=a[1],c=a[2],d=a[3],out=w1);
+    Or4(a=a[4],b=a[5],c=a[6],d=a[7],out=w2);
+    Or(a=w2,b=a[8],out=w3);
+    Or(a=w1,b=w3,out=t0);
+    Xor(a=x,b=y,out=t1);
+    Not(in=t1,out=t2);
+    And(a=t0,b=t2,out=out1);    //out1=(Xn-1 XNOR Yn-1)(Pn-1 + Pn ...P2n-1)
+    
+    And4(a=a[0],b=a[1],c=a[2],d=a[3],out=w4);
+    And4(a=a[4],b=a[5],c=a[6],d=a[7],out=w5);
+    And(a=w5,b=a[8],out=w6);
+    And(a=w4,b=w6,out=w7);
+    Not(in=w7,out=t3);
+    Xor(a=x,b=y,out=t4);
+    And(a=t3,b=t4,out=out2);    //out2=(Xn-1 XOR Yn-1)((Pn-1)(Pn)...(P2n-1))' which is equivalent to (Xn-1 XOR Yn-1)((Pn-1)' + (Pn)' ...(P2n-1)')  
+
+    Or(a=out1,b=out2,out=out);
+}

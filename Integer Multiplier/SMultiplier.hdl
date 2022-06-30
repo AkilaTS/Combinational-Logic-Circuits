@@ -1,0 +1,41 @@
+/**
+ * 8-bit Wallace tree multiplier circuit for signed integers,using carry save addition(CSA) based 3-to-2 reducers followed by 
+ * CLA with higher-level propagate and generate terms
+ */
+
+CHIP Qb {
+    
+	//x is the multiplicand and y is the multiplier
+	IN x[8], y[8];
+    	OUT P[8],OF;
+
+    	PARTS:
+    	
+	//Generating partial products
+	PPGenS(a=x,b=y[0],out=pp0);
+    	PPGenS(a=x,b=y[1],out[0..14]=pp1);
+    	PPGenS(a=x,b=y[2],out[0..13]=pp2);
+    	PPGenS(a=x,b=y[3],out[0..12]=pp3);
+    	PPGenS(a=x,b=y[4],out[0..11]=pp4);
+    	PPGenS(a=x,b=y[5],out[0..10]=pp5);
+    	PPGenS(a=x,b=y[6],out[0..9]=pp6);
+   	PPGenS(a=x,b=y[7],out[0..8]=pp7); 
+
+	//pc7 is one's complement of pp7 if y[7] is 1 
+    	Complement(a[0..6]=false,a[7..15]=pp7,b=y[7],out=pc7);  
+    
+    	//3-to-2 reduction in stages
+	Reducer(x=pp0,y[0]=false,y[1..15]=pp1,z[0..1]=false,z[2..15]=pp2,sum=s10,carry=c10);
+    	Reducer(x[0..2]=false,x[3..15]=pp3,y[0..3]=false,y[4..15]=pp4,z[0..4]=false,z[5..15]=pp5,sum=s11,carry=c11);
+    	Reducer(x[0..5]=false,x[6..15]=pp6,y=pc7,z[0]=y[7],z[1..15]=false,sum=s12,carry=c12);
+    	Reducer(x=c10,y=s10,z=c11,sum=s20,carry=c20);
+    	Reducer(x=s11,y=s12,z=c12,sum=s21,carry=c21);
+    	Reducer(x=c20,y=s20,z=c21,sum=s30,carry=c30);
+    	Reducer(x=c30,y=s30,z=s21,sum=s40,carry=c40);
+
+    	//addition using CLA with higher level propagate and generate terms
+	Adder16(x=s40,y=c40,s[0..7]=P,s[7..15]=w0);
+    
+	//Overflow indication
+   	OverflowS(a=w0,x=x[7],y=y[7],out=OF);   
+}
