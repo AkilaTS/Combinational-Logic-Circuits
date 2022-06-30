@@ -1,0 +1,33 @@
+/**
+ * 4 bit CLA based 9 bit subtractor without using higher-level propagate and generate terms 
+ * 
+ */
+
+CHIP Subtractor9 {
+
+    IN x[9],y[9]; 
+    OUT s[9]; 
+
+    PARTS:
+
+    //1s complement for subtraction
+    Not(in=y[0],out=Y0);
+    Not(in=y[1],out=Y1);
+    Not(in=y[2],out=Y2);
+    Not(in=y[3],out=Y3);
+    Not(in=y[4],out=Y4);
+    Not(in=y[5],out=Y5);
+    Not(in=y[6],out=Y6);
+    Not(in=y[7],out=Y7);
+    Not(in=y[8],out=Y8);    
+    
+    //generating sum and carry bits
+    CLA(x=x[0..3],y[0]=Y0,y[1]=Y1,y[2]=Y2,y[3]=Y3,c=true,s=s[0..3],carry=c4);
+    CLA(x=x[4..7],y[0]=Y4,y[1]=Y5,y[2]=Y6,y[3]=Y7,c=c4,s=s[4..7],carry=c8);
+    
+    Xor(a=x[8],b=Y8,out=P8);
+    And(a=x[8],b=Y8,out=G8);
+
+    Xor(a=P8,b=c8,out=s[8]);
+ 
+}

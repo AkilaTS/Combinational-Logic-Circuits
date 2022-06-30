@@ -1,0 +1,29 @@
+/**
+ * 16-bit Floating Point Multiplier circuit
+ * (1 bit for sign, 8 bits for biased exponent, 7 bits for mantissa)
+ * Bias=127
+ */
+
+CHIP FPMultiplier {
+    
+	
+	IN x[16], y[16];
+	OUT z[16];
+
+    	PARTS:
+
+        //Mantissa multiplication
+        UnsignedMul(x[0..6]=x[0..6],x[7]=true,y[0..6]=y[0..6],y[7]=true,P[15]=Pm15,P[7..13]=t0,P[8..14]=t1);
+
+        //selecting the required 7 bits for mantissa of the result
+        Mux7bit2to1(x0=t0,x1=t1,s=Pm15,y=z[0..6]);
+        
+        Adder8(x=x[7..14],y=y[7..14],s=t2);   // Xe+Ye
+        Subtractor9(x=t2,y[0..6]=true,y[7..8]=false,s[0..7]=t3);    //(Xe+Ye) - Bias
+        Subtractor9(x=t2,y[0]=false,y[1..6]=true,y[7..8]=false,s[0..7]=t4);   //(Xe+Ye) - (Bias-1)
+        Mux8bit2to1(x0=t3,x1=t4,s=Pm15,y=z[7..14]);    //selecting the required Ze acc to Pm15
+
+        //finding sign bit of result
+        Xor(a=x[15],b=y[15],out=z[15]);
+
+}

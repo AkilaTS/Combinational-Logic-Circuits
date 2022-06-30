@@ -1,0 +1,21 @@
+/**
+ * 1 bit Full adder to calculate sum and carry bits
+ */
+
+CHIP FullAdder {
+
+    IN x,y,c;   
+    OUT sum,carry;
+
+    PARTS:
+
+    Xor(a=x,b=y,out=t0);
+    Xor(a=t0,b=c,out=sum);   //sum-bit generated
+
+    And(a=x,b=y,out=w1);
+    And(a=x,b=c,out=w2);
+    And(a=y,b=c,out=w3);
+    Or(a=w1,b=w2,out=w4);
+    Or(a=w3,b=w4,out=carry); //carry-bit generated
+
+}
