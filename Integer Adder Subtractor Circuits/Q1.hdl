@@ -1,0 +1,50 @@
+/**
+ * 16 bit Ripple Carry Adder (RCA)
+ */
+
+CHIP Q1{
+    IN x[16],y[16],AS,signed;
+    OUT s[16],OF;
+
+    PARTS:
+    Xor(a=y[0],b=AS,out=Y0);
+    Xor(a=y[1],b=AS,out=Y1);
+    Xor(a=y[2],b=AS,out=Y2);
+    Xor(a=y[3],b=AS,out=Y3);
+    Xor(a=y[4],b=AS,out=Y4);
+    Xor(a=y[5],b=AS,out=Y5);
+    Xor(a=y[6],b=AS,out=Y6);
+    Xor(a=y[7],b=AS,out=Y7);
+    Xor(a=y[8],b=AS,out=Y8);
+    Xor(a=y[9],b=AS,out=Y9);
+    Xor(a=y[10],b=AS,out=Y10);
+    Xor(a=y[11],b=AS,out=Y11);
+    Xor(a=y[12],b=AS,out=Y12);
+    Xor(a=y[13],b=AS,out=Y13);
+    Xor(a=y[14],b=AS,out=Y14);
+    Xor(a=y[15],b=AS,out=Y15);
+    FullAdder(x=x[0],y=Y0,c=AS,sum=s[0],carry=c1);
+    FullAdder(x=x[1],y=Y1,c=c1,sum=s[1],carry=c2);
+    FullAdder(x=x[2],y=Y2,c=c2,sum=s[2],carry=c3);
+    FullAdder(x=x[3],y=Y3,c=c3,sum=s[3],carry=c4);
+    FullAdder(x=x[4],y=Y4,c=c4,sum=s[4],carry=c5);
+    FullAdder(x=x[5],y=Y5,c=c5,sum=s[5],carry=c6);
+    FullAdder(x=x[6],y=Y6,c=c6,sum=s[6],carry=c7);
+    FullAdder(x=x[7],y=Y7,c=c7,sum=s[7],carry=c8);
+    FullAdder(x=x[8],y=Y8,c=c8,sum=s[8],carry=c9);
+    FullAdder(x=x[9],y=Y9,c=c9,sum=s[9],carry=c10);
+    FullAdder(x=x[10],y=Y10,c=c10,sum=s[10],carry=c11);
+    FullAdder(x=x[11],y=Y11,c=c11,sum=s[11],carry=c12);
+    FullAdder(x=x[12],y=Y12,c=c12,sum=s[12],carry=c13);
+    FullAdder(x=x[13],y=Y13,c=c13,sum=s[13],carry=c14);
+    FullAdder(x=x[14],y=Y14,c=c14,sum=s[14],carry=c15);
+    FullAdder(x=x[15],y=Y15,c=c15,sum=s[15],carry=c16);
+    Not(in=AS,out=w1);
+    And(a=c16,b=w1,out=Ofu);
+    Xor(a=c15,b=c16,out=Ofs);
+    Not(in=signed,out=k0);
+    And(a=k0,b=Ofu,out=k1);
+    And(a=signed,b=Ofs,out=k2);
+    Or(a=k1,b=k2,out=OF);
+    
+}

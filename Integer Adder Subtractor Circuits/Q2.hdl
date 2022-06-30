@@ -1,0 +1,38 @@
+/**
+ * 4 bit CLA based 16 bit adder without using higher-level propagate and generate terms 
+ * 
+ */
+
+CHIP Q2{
+    IN x[16],y[16],signed,AS;
+    OUT s[16],OF;
+
+    PARTS:
+    Xor(a=y[0],b=AS,out=Y0);
+    Xor(a=y[1],b=AS,out=Y1);
+    Xor(a=y[2],b=AS,out=Y2);
+    Xor(a=y[3],b=AS,out=Y3);
+    Xor(a=y[4],b=AS,out=Y4);
+    Xor(a=y[5],b=AS,out=Y5);
+    Xor(a=y[6],b=AS,out=Y6);
+    Xor(a=y[7],b=AS,out=Y7);
+    Xor(a=y[8],b=AS,out=Y8);
+    Xor(a=y[9],b=AS,out=Y9);
+    Xor(a=y[10],b=AS,out=Y10);
+    Xor(a=y[11],b=AS,out=Y11);
+    Xor(a=y[12],b=AS,out=Y12);
+    Xor(a=y[13],b=AS,out=Y13);
+    Xor(a=y[14],b=AS,out=Y14);
+    Xor(a=y[15],b=AS,out=Y15);
+    CLA(x=x[0..3],y[0]=Y0,y[1]=Y1,y[2]=Y2,y[3]=Y3,c=AS,s=s[0..3],carry=c4);
+    CLA(x=x[4..7],y[0]=Y4,y[1]=Y5,y[2]=Y6,y[3]=Y7,c=c4,s=s[4..7],carry=c8);
+    CLA(x=x[8..11],y[0]=Y8,y[1]=Y9,y[2]=Y10,y[3]=Y11,c=c8,s=s[8..11],carry=c12);
+    CLA(x=x[12..15],y[0]=Y12,y[1]=Y13,y[2]=Y14,y[3]=Y15,c=c12,s=s[12..15],cp=c15,carry=c16);
+    Not(in=AS,out=w1);
+    And(a=c16,b=w1,out=Ofu);
+    Xor(a=c15,b=c16,out=Ofs);
+    Not(in=signed,out=w0);
+    And(a=w0,b=Ofu,out=k1);
+    And(a=signed,b=Ofs,out=k2);
+    Or(a=k1,b=k2,out=OF);
+}
