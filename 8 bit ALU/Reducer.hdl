@@ -1,0 +1,32 @@
+/**
+ * Carry Save Addition (CSA) based 3 to 2 Reducer  
+**/
+
+CHIP Reducer {
+    
+	IN x[16], y[16], z[16];     //x,y,z are the 3 summands, each of length 16 bits 
+	OUT sum[16],carry[16];      //sum and carry are the 2 summands generated as output, each of 16 bits
+
+    	PARTS:
+
+    	Not(in=true,out=carry[0]); //setting carry[0] to 0
+
+	//using Full Adders to generate the sum and carry bits corresponding to each bit position
+    	FullAdder(x=x[0],y=y[0],c=z[0],sum=sum[0],carry=carry[1]); 
+    	FullAdder(x=x[1],y=y[1],c=z[1],sum=sum[1],carry=carry[2]);
+    	FullAdder(x=x[2],y=y[2],c=z[2],sum=sum[2],carry=carry[3]);
+    	FullAdder(x=x[3],y=y[3],c=z[3],sum=sum[3],carry=carry[4]);
+    	FullAdder(x=x[4],y=y[4],c=z[4],sum=sum[4],carry=carry[5]);
+    	FullAdder(x=x[5],y=y[5],c=z[5],sum=sum[5],carry=carry[6]);
+    	FullAdder(x=x[6],y=y[6],c=z[6],sum=sum[6],carry=carry[7]);
+    	FullAdder(x=x[7],y=y[7],c=z[7],sum=sum[7],carry=carry[8]);
+    	FullAdder(x=x[8],y=y[8],c=z[8],sum=sum[8],carry=carry[9]);
+    	FullAdder(x=x[9],y=y[9],c=z[9],sum=sum[9],carry=carry[10]);
+    	FullAdder(x=x[10],y=y[10],c=z[10],sum=sum[10],carry=carry[11]);
+    	FullAdder(x=x[11],y=y[11],c=z[11],sum=sum[11],carry=carry[12]);
+    	FullAdder(x=x[12],y=y[12],c=z[12],sum=sum[12],carry=carry[13]);
+    	FullAdder(x=x[13],y=y[13],c=z[13],sum=sum[13],carry=carry[14]);
+    	FullAdder(x=x[14],y=y[14],c=z[14],sum=sum[14],carry=carry[15]);
+    	FullAdder(x=x[15],y=y[15],c=z[15],sum=sum[15]);
+
+}
